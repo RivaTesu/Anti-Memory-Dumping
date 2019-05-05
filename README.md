@@ -1,6 +1,6 @@
 # Anti-Memory-Dumping
 
-@ Overwrites the whole PE Header
+Overwrites the whole PE Header
 
 * Remember starting the process suspended with CreateProcess can defeat this, therefor this should be used with code getting invoked with reflection on runtime.
 
