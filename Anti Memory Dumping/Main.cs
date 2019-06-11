@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Anti_Memory_Dumping
 {
@@ -12,13 +13,13 @@ namespace Anti_Memory_Dumping
         [DllImport("kernel32.dll")]
         public static extern IntPtr VirtualProtect(IntPtr lpAddress, IntPtr dwSize, IntPtr flNewProtect, ref IntPtr lpflOldProtect);
 
-        public static void EraseSection(IntPtr address, int size)
+        public void EraseSection(IntPtr address, int size)
         {
             IntPtr sz = (IntPtr)size;
-            IntPtr dwOld = default(IntPtr);
+            IntPtr dwOld = default;
             VirtualProtect(address, sz, (IntPtr)0x40, ref dwOld);
             ZeroMemory(address, sz);
-            IntPtr temp = default(IntPtr);
+            IntPtr temp = default;
             VirtualProtect(address, sz, dwOld, ref temp);
         }
 
@@ -26,20 +27,20 @@ namespace Anti_Memory_Dumping
         {
             InitializeComponent();
 
-            int[] sectiontabledwords = new int[] { 0x8, 0xC, 0x10, 0x14, 0x18, 0x1C, 0x24 };
-            int[] peheaderbytes = new int[] { 0x1A, 0x1B };
-            int[] peheaderwords = new int[] { 0x4, 0x16, 0x18, 0x40, 0x42, 0x44, 0x46, 0x48, 0x4A, 0x4C, 0x5C, 0x5E };
-
+            var sectiontabledwords = new List<int>() { 0x8, 0xC, 0x10, 0x14, 0x18, 0x1C, 0x24 };
+            var peheaderbytes = new List<int>() { 0x1A, 0x1B };
+            var peheaderwords = new List<int>() { 0x4, 0x16, 0x18, 0x40, 0x42, 0x44, 0x46, 0x48, 0x4A, 0x4C, 0x5C, 0x5E };
             var process = System.Diagnostics.Process.GetCurrentProcess();
             var base_address = process.MainModule.BaseAddress;
             var dwpeheader = Marshal.ReadInt32((IntPtr)(base_address.ToInt32() + 0x3C));
             var wnumberofsections = Marshal.ReadInt16((IntPtr)(base_address.ToInt32() + dwpeheader + 0x6));
 
-            for (int i = 0; i < peheaderwords.Length; i++)
+            for (int i = 0; i < peheaderwords.Count; i++)
             {
                 EraseSection((IntPtr)(base_address.ToInt32() + dwpeheader + peheaderwords[i]), 1);
             }
-            for (int i = 0; i < peheaderbytes.Length; i++)
+
+            for (int i = 0; i < peheaderbytes.Count; i++)
             {
                 EraseSection((IntPtr)(base_address.ToInt32() + dwpeheader + peheaderbytes[i]), 2);
             }
@@ -56,7 +57,7 @@ namespace Anti_Memory_Dumping
 
                 y++;
 
-                if (y == sectiontabledwords.Length)
+                if (y == sectiontabledwords.Count)
                 {
                     x++;
                     y = 0;
