@@ -4,4 +4,4 @@
 
 - And you might wanna change the RPM api out with Marshal.ReadInt
 - And it would probally be better overwriting offsets in .NET Directory instead of the PE Header. But this gives a good idea about how you find around in the Header with .NET
-- And yes I hate structures, if anyone wonder why I use arrays over structures.
+- And yes I hate structures, if anyone wonder why I use arrays over structures..
