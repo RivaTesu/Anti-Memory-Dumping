@@ -8,12 +8,18 @@ namespace Anti_Memory_Dumping
     public partial class Main : Form
     {
         [DllImport("kernel32.dll")]
+#pragma warning disable CA1401 // P/Invokes should not be visible
         public static extern IntPtr ZeroMemory(IntPtr addr, IntPtr size);
+#pragma warning restore CA1401 // P/Invokes should not be visible
 
         [DllImport("kernel32.dll")]
+#pragma warning disable CA1401 // P/Invokes should not be visible
         public static extern IntPtr VirtualProtect(IntPtr lpAddress, IntPtr dwSize, IntPtr flNewProtect, ref IntPtr lpflOldProtect);
+#pragma warning restore CA1401 // P/Invokes should not be visible
 
+#pragma warning disable CA1822 // Mark members as static
         public void EraseSection(IntPtr address, int size)
+#pragma warning restore CA1822 // Mark members as static
         {
             IntPtr sz = (IntPtr)size;
             IntPtr dwOld = default;
@@ -65,7 +71,7 @@ namespace Anti_Memory_Dumping
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("I don't know why I made this button haha", "iYaReM", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
